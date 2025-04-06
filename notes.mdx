@@ -1,0 +1,78 @@
+commands for postgresql:
+psql -U postgres: connect to postgres
+\l: list databases
+\c postgres: connect to postgres
+\dt: list tables
+\d+ table_name: describe table
+\q: quit
+\du: list users
+\du+ username: describe user
+
+create user:
+CREATE USER myuser WITH PASSWORD 'm;
+
+create database:
+CREATE DATABASE mydb;
+
+connect to database:
+\c mydb
+
+create extension:
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+create table:
+CREATE TABLE users (
+id SERIAL PRIMARY KEY,
+username VARCHAR(50) NOT NULL,
+email VARCHAR(100) NOT NULL
+password VARCHAR(100) NOT NULL
+);
+
+insert into users (username, email, password) values ('test', 'test@test.com', 'test');
+select _ from users;
+select _ from users where username like '%test%';
+
+---
+
+// Process for adding postgres database:
+postgres=# CREATE DATABASE daily_thoughts;
+CREATE DATABASE
+postgres=#
+postgres=# \l
+List of databases
+Name | Owner | Encoding | Locale Provider | Collate | Ctype | Locale | ICU Rules | Access privileges
+----------------+----------+----------+-----------------+---------+-------+--------+-----------+-----------------------
+daily_thoughts | postgres | UTF8 | libc | en-US | en-US | | |
+postgres | postgres | UTF8 | libc | en-US | en-US | | |
+template0 | postgres | UTF8 | libc | en-US | en-US | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+template1 | postgres | UTF8 | libc | en-US | en-US | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+(4 rows)
+
+postgres=# create user daily_thoughts with encrypted password 'daily_thoughts';
+CREATE ROLE
+postgres=# \du
+List of roles
+Role name | Attributes
+----------------+------------------------------------------------------------
+daily_thoughts |
+postgres | Superuser, Create role, Create DB, Replication, Bypass RLS
+
+postgres=# grant all privileges on database daily_thoughts to daily_thoughts;
+GRANT
+postgres=# \l
+List of databases
+Name | Owner | Encoding | Locale Provider | Collate | Ctype | Locale | ICU Rules | Access privileges
+----------------+----------+----------+-----------------+---------+-------+--------+-----------+-----------------------------
+daily_thoughts | postgres | UTF8 | libc | en-US | en-US | | | =Tc/postgres +
+| | | | | | | | postgres=CTc/postgres +
+| | | | | | | | daily_thoughts=CTc/postgres
+postgres | postgres | UTF8 | libc | en-US | en-US | | |
+template0 | postgres | UTF8 | libc | en-US | en-US | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+template1 | postgres | UTF8 | libc | en-US | en-US | | | =c/postgres +
+| | | | | | | | postgres=CTc/postgres
+(4 rows)
+
+postgres=#
